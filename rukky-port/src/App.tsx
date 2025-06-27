@@ -1,3 +1,4 @@
+"use client"
 import Nav from './Main/Nav'
 import Intro from './Main/Intro'
 import Tech from './Main/Tech'
