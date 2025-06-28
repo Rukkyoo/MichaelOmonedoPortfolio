@@ -3,6 +3,7 @@ import Nav from './Main/Nav'
 import Intro from './Main/Intro'
 import Tech from './Main/Tech'
 import Project from './Main/Project'
+import Experience from './Main/Experience'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Intro />
       <Tech />
       <Project />
+      <Experience />
     </div>
   )
 }
