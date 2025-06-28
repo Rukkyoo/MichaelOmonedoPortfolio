@@ -109,8 +109,8 @@ const Tech = () => {
   const duplicatedSecondRow = [...secondRowData, ...secondRowData];
 
   return (
-    <div className="mt-10 flex flex-col items-center">
-      <h3 className="text-2xl font-bold mb-8">Technologies I use</h3>
+    <div  className="mt-20 flex flex-col items-center ">
+      <h3 className="text-2xl font-bold mb-8 lg:text-4xl">Technologies I use</h3>
 
       {/* First row - faster scrolling */}
       <div className="w-full overflow-hidden py-2 mb-4">

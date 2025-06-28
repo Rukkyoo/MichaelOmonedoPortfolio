@@ -77,8 +77,8 @@ const Project = () => {
   ];
 
   return (
-    <div className="mt-10 flex flex-col items-center">
-      <h3 className="text-2xl font-bold mb-8">Projects</h3>
+    <div className="mt-20 flex flex-col items-center">
+      <h3 className="text-2xl font-bold mb-8 lg:text-4xl">Projects</h3>
       <div className="flex flex-col">
         {projectInfo.map((project) => (
           <div 

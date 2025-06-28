@@ -55,8 +55,8 @@ const Experience = () => {
   ];
 
   return (
-    <div className="mt-10 flex flex-col items-center">
-      <h3 className="text-2xl font-bold mb-8">Experience</h3>
+    <div id="experience" className="mt-10 flex flex-col items-center">
+      <h3 className="text-2xl font-bold mb-8  lg:text-4xl">Experience</h3>
       <div className="w-full max-w-4xl">
         {experienceData.map((exp) => (
           <div
