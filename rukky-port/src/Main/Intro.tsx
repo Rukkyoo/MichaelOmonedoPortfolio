@@ -4,7 +4,7 @@ const Intro = () => {
   return (
     <div className="mt-10 flex flex-col items-center">
       <h1 className="text-4xl sm:text-6xl font-bold text-center">
-        Hello there, I'm Michael Omonedo
+        Hello there 👋, I'm Michael <span className="text-gray-500">Omonedo</span> 
       </h1>
       <p className="text-lg px-5.5 sm:text-2xl text-center mt-4 text-zinc-700">
         I am a fullstack developer (frontend heavy) who is passionate about

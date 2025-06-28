@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+@keyframes infinite-scroll-fast {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes infinite-scroll-slow-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-infinite-scroll-fast {
+  animation: infinite-scroll-fast 15s linear infinite;
+  display: flex;
+  width: fit-content;
+}
+
+.animate-infinite-scroll-slow-reverse {
+  animation: infinite-scroll-slow-reverse 25s linear infinite;
+  display: flex;
+  width: fit-content;
+}
+
+/* Optional: Pause on hover */
+.animate-infinite-scroll-fast:hover,
+.animate-infinite-scroll-slow-reverse:hover {
+  animation-play-state: paused;
+}
