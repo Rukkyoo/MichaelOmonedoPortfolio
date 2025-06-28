@@ -13,6 +13,8 @@ import { FaGithub } from "react-icons/fa";
 import { SiMongodb } from "react-icons/si";
 import { SiPostman } from "react-icons/si";
 import { IoLogoFirebase } from "react-icons/io5";
+import { FiFramer } from "react-icons/fi";
+
 
 const Tech = () => {
   const data = [
@@ -90,6 +92,11 @@ const Tech = () => {
       id: 15,
       name: "Firebase",
       icon: <IoLogoFirebase size={50} />,
+    },
+    {
+      id: 16,
+      name: "Framer",
+      icon: <FiFramer size={50} />,
     },
   ];
 

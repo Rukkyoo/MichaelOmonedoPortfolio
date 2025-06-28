@@ -6,7 +6,7 @@ const Nav = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
-    <div className="flex sticky top-0 flex-row justify-between bg-zinc-200 border-b-zinc-300 border-b-1">
+    <div className="flex z-50 sticky top-0 flex-row justify-between bg-zinc-200 border-b-zinc-300 border-b-1">
       <div className="flex font-bold justify-between gap-4 items-center text-black p-4">
         Rukkyoo{" "}
         <span className="cursor-pointer hover:text-gray-500">
