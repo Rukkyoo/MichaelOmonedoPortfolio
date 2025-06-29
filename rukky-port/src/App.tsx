@@ -8,35 +8,34 @@ import Contact from "./Main/Contact";
 import Footer from "./Main/Footer";
 
 function App() {
-const introRef = useRef<HTMLDivElement | null>(null);
-const techRef = useRef<HTMLDivElement | null>(null);
-const projectRef = useRef<HTMLDivElement | null>(null);
-const experienceRef = useRef<HTMLDivElement | null>(null);
-const contactRef = useRef<HTMLDivElement | null>(null);
+  const introRef = useRef<HTMLDivElement | null>(null);
+  const techRef = useRef<HTMLDivElement | null>(null);
+  const projectRef = useRef<HTMLDivElement | null>(null);
+  const experienceRef = useRef<HTMLDivElement | null>(null);
+  const contactRef = useRef<HTMLDivElement | null>(null);
 
   // Smooth scroll function with offset for fixed header
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
-  if (ref.current) {
-    const offset = 120;
-    const bodyRect = document.body.getBoundingClientRect().top;
-    const elementRect = ref.current.getBoundingClientRect().top;
-    const elementPosition = elementRect - bodyRect;
-    const offsetPosition = elementPosition - offset;
+    if (ref.current) {
+      const offset = 120;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = ref.current.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth"
-    });
-  }
-};
-
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <div className="bg-gray-100 h-fit">
       <Nav
         scrollToSection={scrollToSection}
         refs={{ introRef, techRef, projectRef, experienceRef, contactRef }}
       />
-      
+
       {/* Add scroll-margin-top to account for fixed header */}
       <section ref={introRef} id="home" className="scroll-mt-25">
         <Intro />

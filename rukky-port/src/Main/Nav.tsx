@@ -1,16 +1,16 @@
 import { FaRegMoon, FaBars } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import { RefObject } from "react";
+import { type RefObject } from "react";
 import React from "react";
 
 interface NavProps {
-  scrollToSection: (ref: RefObject<HTMLDivElement>) => void;
+  scrollToSection: (ref: RefObject<HTMLDivElement | null>) => void;
   refs: {
-    introRef: RefObject<HTMLDivElement>;
-    techRef: RefObject<HTMLDivElement>;
-    projectRef: RefObject<HTMLDivElement>;
-    experienceRef: RefObject<HTMLDivElement>;
-    contactRef: RefObject<HTMLDivElement>;
+    introRef: RefObject<HTMLDivElement | null>;
+    techRef: RefObject<HTMLDivElement | null>;
+    projectRef: RefObject<HTMLDivElement | null>;
+    experienceRef: RefObject<HTMLDivElement | null>;
+    contactRef: RefObject<HTMLDivElement | null>;
   };
 }
 
