@@ -6,8 +6,19 @@ import { FaNodeJs } from "react-icons/fa";
 import { SiExpress } from "react-icons/si";
 import { SiMongodb } from "react-icons/si";
 import { IoLogoFirebase } from "react-icons/io5";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef } from "react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const Project = () => {
+  const containerRef = useRef(null);
+  const titleRef = useRef(null);
+  const projectRefs = useRef([]);
+
   const projectInfo = [
     {
       id: 1,
@@ -76,38 +87,162 @@ const Project = () => {
     },
   ];
 
+  // Add refs to array
+  projectRefs.current = projectRefs.current.slice(0, projectInfo.length);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const ctx = gsap.context(() => {
+        // Initial setup - hide elements
+        gsap.set(titleRef.current, {
+          opacity: 0,
+          y: 30
+        });
+
+        gsap.set(projectRefs.current, {
+          opacity: 0,
+          y: 50,
+          scale: 0.95
+        });
+
+        // Title animation
+        gsap.to(titleRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        });
+
+        // Staggered project cards animation
+        projectRefs.current.forEach((card, index) => {
+          if (card) {
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              },
+              delay: index * 0.1 // Stagger effect
+            });
+
+            // Technology icons animation
+            const techIcons = card.querySelectorAll('.tech-icon');
+            gsap.set(techIcons, { scale: 0, opacity: 0 });
+            
+            gsap.to(techIcons, {
+              scale: 1,
+              opacity: 1,
+              duration: 0.4,
+              ease: "back.out(1.7)",
+              stagger: 0.1,
+              scrollTrigger: {
+                trigger: card,
+                start: "top 70%",
+                toggleActions: "play none none reverse"
+              },
+              delay: 0.3
+            });
+
+            // Hover effects for project cards
+            card.addEventListener('mouseenter', () => {
+              gsap.to(card, {
+                y: -8,
+                scale: 1.02,
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                duration: 0.3,
+                ease: "power2.out"
+              });
+            });
+
+            card.addEventListener('mouseleave', () => {
+              gsap.to(card, {
+                y: 0,
+                scale: 1,
+                boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
+                duration: 0.3,
+                ease: "power2.out"
+              });
+            });
+          }
+        });
+
+        // Link hover effects
+        const links = containerRef.current.querySelectorAll('.project-link');
+        links.forEach(link => {
+          link.addEventListener('mouseenter', () => {
+            gsap.to(link, {
+              scale: 1.05,
+              duration: 0.2,
+              ease: "power2.out"
+            });
+          });
+
+          link.addEventListener('mouseleave', () => {
+            gsap.to(link, {
+              scale: 1,
+              duration: 0.2,
+              ease: "power2.out"
+            });
+          });
+        });
+
+      }, containerRef);
+
+      return () => ctx.revert();
+    }
+  }, []);
+
   return (
-    <div className="mt-20 flex flex-col items-center">
-      <h3 className="text-2xl font-bold mb-8 lg:text-4xl">Projects</h3>
+    <div ref={containerRef} className="mt-20 flex flex-col items-center">
+      <h3 ref={titleRef} className="text-2xl font-bold mb-8 lg:text-4xl">Projects</h3>
       <div className="flex flex-col">
-        {projectInfo.map((project) => (
+        {projectInfo.map((project, index) => (
           <div 
             key={project.id}
-            className="bg-zinc-200 border-zinc-300 rounded-md border-2 p-2 mx-4 mb-4"
+            ref={(el) => (projectRefs.current[index] = el)}
+            className="bg-zinc-200 border-zinc-300 rounded-md border-2 p-4 mx-4 mb-6 transition-shadow duration-300 cursor-pointer"
           >
-            <h4 className="font-bold mb-2">{project.name}</h4>
-            <p className="mb-2 text-zinc-500">
+            <h4 className="font-bold mb-3 text-lg">{project.name}</h4>
+            <p className="mb-3 text-zinc-600 leading-relaxed">
               {project.desc}
             </p>
-            <p className="mb-2 flex flex-row items-center gap-2">
-              Technologies Used:
-              {project.technology.map((tech, index) => (
-                <span key={index}>{tech}</span>
+            <div className="mb-4 flex flex-row items-center gap-2 flex-wrap">
+              <span className="font-medium">Technologies Used:</span>
+              {project.technology.map((tech, techIndex) => (
+                <span key={techIndex} className="tech-icon">
+                  {tech}
+                </span>
               ))}
-            </p>
-            <div className="flex flex-row gap-4.5">
+            </div>
+            <div className="flex flex-row gap-6">
               {project.demo && (
-                <p className="font-bold">
-                  <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                    Demo
-                  </a>
-                </p>
-              )}
-              <p className="font-bold">
-                <a href={project.github} target="_blank" rel="noopener noreferrer">
-                  Github
+                <a 
+                  href={project.demo} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="project-link font-bold text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                >
+                  Demo
                 </a>
-              </p>
+              )}
+              <a 
+                href={project.github} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="project-link font-bold text-gray-700 hover:text-gray-900 transition-colors duration-200"
+              >
+                GitHub
+              </a>
             </div>
           </div>
         ))}

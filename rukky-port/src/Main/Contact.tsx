@@ -1,15 +1,201 @@
-import { SiGmail } from "react-icons/si";
-import { FaLinkedinIn } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaGithub } from "react-icons/fa";
+"use client"
+
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { SiGmail } from "react-icons/si"
+import { FaLinkedinIn } from "react-icons/fa"
+import { FaXTwitter } from "react-icons/fa6"
+import { FaGithub } from "react-icons/fa"
+
+// Register GSAP plugins
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 const Contact = () => {
+  const contactRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const socialRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Set initial states
+      gsap.set([titleRef.current, formRef.current, socialRef.current], {
+        opacity: 0,
+        y: 50,
+      })
+
+      // Create scroll-triggered animation
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: contactRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse",
+        },
+      })
+
+      // Animate title
+      tl.to(titleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      })
+        // Animate form with a slight delay
+        .to(
+          formRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.4",
+        )
+        // Animate social icons
+        .to(
+          socialRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+          },
+          "-=0.3",
+        )
+
+      // Animate form fields individually on scroll
+      gsap.from(".form-field", {
+        scrollTrigger: {
+          trigger: formRef.current,
+          start: "top 85%",
+          end: "bottom 15%",
+          toggleActions: "play none none reverse",
+        },
+        x: -30,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
+        delay: 0.3,
+      })
+
+      // Animate social icons individually
+      gsap.from(".social-icon", {
+        scrollTrigger: {
+          trigger: socialRef.current,
+          start: "top 90%",
+          end: "bottom 10%",
+          toggleActions: "play none none reverse",
+        },
+        scale: 0,
+        rotation: 180,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "back.out(1.7)",
+        delay: 0.5,
+      })
+
+      // Form input focus animations
+      const inputs = document.querySelectorAll("input, textarea")
+      inputs.forEach((input) => {
+        input.addEventListener("focus", () => {
+          gsap.to(input, {
+            scale: 1.02,
+            duration: 0.3,
+            ease: "power2.out",
+          })
+        })
+
+        input.addEventListener("blur", () => {
+          gsap.to(input, {
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out",
+          })
+        })
+      })
+
+      // Button hover animations
+      const submitButton = document.querySelector(".submit-button")
+      if (submitButton) {
+        submitButton.addEventListener("mouseenter", () => {
+          gsap.to(submitButton, {
+            scale: 1.05,
+            y: -2,
+            duration: 0.3,
+            ease: "power2.out",
+          })
+        })
+
+        submitButton.addEventListener("mouseleave", () => {
+          gsap.to(submitButton, {
+            scale: 1,
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out",
+          })
+        })
+      }
+
+      // Social icon hover animations
+      document.querySelectorAll(".social-icon").forEach((icon) => {
+        icon.addEventListener("mouseenter", () => {
+          gsap.to(icon, {
+            scale: 1.2,
+            rotation: 5,
+            duration: 0.3,
+            ease: "power2.out",
+          })
+        })
+
+        icon.addEventListener("mouseleave", () => {
+          gsap.to(icon, {
+            scale: 1,
+            rotation: 0,
+            duration: 0.3,
+            ease: "power2.out",
+          })
+        })
+      })
+
+      // Form submission animation
+      const form = formRef.current
+      if (form) {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault()
+
+          // Create success animation
+          gsap.to(form, {
+            scale: 0.95,
+            duration: 0.1,
+            ease: "power2.out",
+            yoyo: true,
+            repeat: 1,
+            onComplete: () => {
+              // You can add actual form submission logic here
+              console.log("Form submitted!")
+            },
+          })
+        })
+      }
+    }, contactRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <div id="contact" className="mt-10 flex flex-col items-center">
-      <h3 className="text-2xl font-bold mb-8 lg:text-4xl">Contact Me</h3>
+    <div ref={contactRef} id="contact" className="mt-10 flex flex-col items-center">
+      <h3 ref={titleRef} className="text-2xl font-bold mb-8 lg:text-4xl">
+        Contact Me
+      </h3>
+
       <div className="flex flex-col items-center">
-        <form className=" w-[90vw] border-zinc-300 rounded-md border-2 p-6 lg:w-[60vw]">
-          <div className="mb-4">
+        <form ref={formRef} className="w-[90vw] border-zinc-300 rounded-md border-2 p-6 lg:w-[60vw]">
+          <div className="form-field mb-4">
             <label htmlFor="name" className="block text-zinc-700 mb-2">
               Your Name
             </label>
@@ -20,8 +206,7 @@ const Contact = () => {
               required
             />
           </div>
-
-          <div className="mb-4">
+          <div className="form-field mb-4">
             <label htmlFor="email" className="block text-zinc-700 mb-2">
               Your Email
             </label>
@@ -32,8 +217,7 @@ const Contact = () => {
               required
             />
           </div>
-
-          <div className="mb-6">
+          <div className="form-field mb-6">
             <label htmlFor="message" className="block text-zinc-700 mb-2">
               Your Message
             </label>
@@ -44,19 +228,18 @@ const Contact = () => {
               required
             />
           </div>
-
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 px-4 rounded-md cursor-pointer hover:bg-gray-700 transition duration-300 ease-in-out"
+            className="submit-button w-full bg-black text-white py-2 px-4 rounded-md cursor-pointer hover:bg-gray-700 transition duration-300 ease-in-out"
           >
             Send Message
           </button>
         </form>
 
-        <div className="flex gap-6 mt-4">
+        <div ref={socialRef} className="flex gap-6 mt-4">
           <a
             href="mailto:michaelomonedo001@gmail.com"
-            className="text-zinc-700 hover:text-blue-500 transition-colors duration-200"
+            className="social-icon text-zinc-700 hover:text-blue-500 transition-colors duration-200"
             aria-label="Email"
           >
             <SiGmail size={24} />
@@ -65,7 +248,7 @@ const Contact = () => {
             href="http://linkedin.com/in/michael-omonedo/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-zinc-700 hover:text-blue-500 transition-colors duration-200"
+            className="social-icon text-zinc-700 hover:text-blue-500 transition-colors duration-200"
             aria-label="LinkedIn"
           >
             <FaLinkedinIn size={24} />
@@ -74,7 +257,7 @@ const Contact = () => {
             href="https://x.com/Wazzaaah_"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-zinc-700 hover:text-blue-500 transition-colors duration-200"
+            className="social-icon text-zinc-700 hover:text-blue-500 transition-colors duration-200"
             aria-label="Twitter"
           >
             <FaXTwitter size={24} />
@@ -83,7 +266,7 @@ const Contact = () => {
             href="https://github.com/Rukkyoo"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-zinc-700 hover:text-blue-500 transition-colors duration-200"
+            className="social-icon text-zinc-700 hover:text-blue-500 transition-colors duration-200"
             aria-label="GitHub"
           >
             <FaGithub size={24} />
@@ -91,7 +274,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Contact;
+export default Contact
