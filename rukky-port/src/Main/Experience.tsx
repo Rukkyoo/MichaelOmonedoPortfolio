@@ -7,9 +7,9 @@ if (typeof window !== "undefined") {
 }
 
 const Experience = () => {
-  const containerRef = useRef(null);
-  const titleRef = useRef(null);
-  const experienceRefs = useRef([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const experienceRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const experienceData = [
     {
@@ -175,47 +175,51 @@ const Experience = () => {
         });
 
         // Site link hover effects
-        const siteLinks = containerRef.current.querySelectorAll('.site-link');
-        siteLinks.forEach(link => {
-          link.addEventListener('mouseenter', () => {
-            gsap.to(link, {
-              scale: 1.05,
-              duration: 0.2,
-              ease: "power2.out"
+        if (containerRef.current) {
+          const siteLinks = containerRef.current.querySelectorAll('.site-link');
+          siteLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+              gsap.to(link, {
+                scale: 1.05,
+                duration: 0.2,
+                ease: "power2.out"
+              });
             });
-          });
 
-          link.addEventListener('mouseleave', () => {
-            gsap.to(link, {
-              scale: 1,
-              duration: 0.2,
-              ease: "power2.out"
+            link.addEventListener('mouseleave', () => {
+              gsap.to(link, {
+                scale: 1,
+                duration: 0.2,
+                ease: "power2.out"
+              });
             });
           });
-        });
+        }
 
         // Timeline animation for current role indicator
-        const currentRoleCards = containerRef.current.querySelectorAll('.current-role');
-        currentRoleCards.forEach(card => {
-          const pulse = gsap.to(card, {
-            boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.3)",
-            duration: 1.5,
-            ease: "power2.inOut",
-            repeat: -1,
-            yoyo: true,
-            paused: true
-          });
+        if (containerRef.current) {
+          const currentRoleCards = containerRef.current.querySelectorAll('.current-role');
+          currentRoleCards.forEach(card => {
+            const pulse = gsap.to(card, {
+              boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.3)",
+              duration: 1.5,
+              ease: "power2.inOut",
+              repeat: -1,
+              yoyo: true,
+              paused: true
+            });
 
-          ScrollTrigger.create({
-            trigger: card,
-            start: "top 80%",
-            end: "bottom 20%",
-            onEnter: () => pulse.play(),
-            onLeave: () => pulse.pause(),
-            onEnterBack: () => pulse.play(),
-            onLeaveBack: () => pulse.pause()
+            ScrollTrigger.create({
+              trigger: card,
+              start: "top 80%",
+              end: "bottom 20%",
+              onEnter: () => pulse.play(),
+              onLeave: () => pulse.pause(),
+              onEnterBack: () => pulse.play(),
+              onLeaveBack: () => pulse.pause()
+            });
           });
-        });
+        }
 
       }, containerRef);
 
@@ -230,7 +234,7 @@ const Experience = () => {
         {experienceData.map((exp, index) => (
           <div
             key={exp.id}
-            ref={(el) => (experienceRefs.current[index] = el)}
+            ref={(el) => { experienceRefs.current[index] = el; }}
             className={`bg-zinc-200 border-zinc-300 rounded-md border-2 p-4 mx-4 mb-4 transition-shadow duration-300 cursor-pointer ${
               exp.duration.includes('Present') ? 'current-role' : ''
             }`}

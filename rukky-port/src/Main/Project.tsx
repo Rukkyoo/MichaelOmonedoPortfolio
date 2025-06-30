@@ -15,9 +15,9 @@ if (typeof window !== "undefined") {
 }
 
 const Project = () => {
-  const containerRef = useRef(null);
-  const titleRef = useRef(null);
-  const projectRefs = useRef([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const projectInfo = [
     {
@@ -136,7 +136,7 @@ const Project = () => {
             });
 
             // Technology icons animation
-            const techIcons = card.querySelectorAll('.tech-icon');
+            const techIcons = (card as HTMLDivElement).querySelectorAll('.tech-icon');
             gsap.set(techIcons, { scale: 0, opacity: 0 });
             
             gsap.to(techIcons, {
@@ -177,24 +177,26 @@ const Project = () => {
         });
 
         // Link hover effects
-        const links = containerRef.current.querySelectorAll('.project-link');
-        links.forEach(link => {
-          link.addEventListener('mouseenter', () => {
-            gsap.to(link, {
-              scale: 1.05,
-              duration: 0.2,
-              ease: "power2.out"
+        if (containerRef.current) {
+          const links = containerRef.current.querySelectorAll('.project-link');
+          links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+              gsap.to(link, {
+                scale: 1.05,
+                duration: 0.2,
+                ease: "power2.out"
+              });
             });
-          });
 
-          link.addEventListener('mouseleave', () => {
-            gsap.to(link, {
-              scale: 1,
-              duration: 0.2,
-              ease: "power2.out"
+            link.addEventListener('mouseleave', () => {
+              gsap.to(link, {
+                scale: 1,
+                duration: 0.2,
+                ease: "power2.out"
+              });
             });
           });
-        });
+        }
 
       }, containerRef);
 
@@ -209,7 +211,7 @@ const Project = () => {
         {projectInfo.map((project, index) => (
           <div 
             key={project.id}
-            ref={(el) => (projectRefs.current[index] = el)}
+            ref={el => { projectRefs.current[index] = el; }}
             className="bg-zinc-200 border-zinc-300 rounded-md border-2 p-4 mx-4 mb-6 transition-shadow duration-300 cursor-pointer"
           >
             <h4 className="font-bold mb-3 text-lg">{project.name}</h4>

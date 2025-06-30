@@ -24,11 +24,11 @@ if (typeof window !== "undefined") {
 
 const Tech = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef(null);
-  const firstRowRef = useRef(null);
-  const secondRowRef = useRef(null);
-  const firstRowInnerRef = useRef(null);
-  const secondRowInnerRef = useRef(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const firstRowRef = useRef<HTMLDivElement>(null);
+  const secondRowRef = useRef<HTMLDivElement>(null);
+  const firstRowInnerRef = useRef<HTMLDivElement>(null);
+  const secondRowInnerRef = useRef<HTMLDivElement>(null);
 
   const data = [
     {
@@ -156,25 +156,29 @@ const Tech = () => {
         }, "-=0.4");
 
         // Infinite scroll animations
-        const firstRowWidth = firstRowInnerRef.current.scrollWidth / 2;
-        const secondRowWidth = secondRowInnerRef.current.scrollWidth / 2;
+        const firstRowWidth = firstRowInnerRef.current ? firstRowInnerRef.current.scrollWidth / 2 : 0;
+        const secondRowWidth = secondRowInnerRef.current ? secondRowInnerRef.current.scrollWidth / 2 : 0;
 
         // First row - left to right
-        gsap.to(firstRowInnerRef.current, {
-          x: -firstRowWidth,
-          duration: 20,
-          ease: "none",
-          repeat: -1
-        });
+        if (firstRowInnerRef.current) {
+          gsap.to(firstRowInnerRef.current, {
+            x: -firstRowWidth,
+            duration: 20,
+            ease: "none",
+            repeat: -1
+          });
+        }
 
         // Second row - right to left (reverse)
-        gsap.set(secondRowInnerRef.current, { x: -secondRowWidth });
-        gsap.to(secondRowInnerRef.current, {
-          x: 0,
-          duration: 25,
-          ease: "none",
-          repeat: -1
-        });
+        if (secondRowInnerRef.current) {
+          gsap.set(secondRowInnerRef.current, { x: -secondRowWidth });
+          gsap.to(secondRowInnerRef.current, {
+            x: 0,
+            duration: 25,
+            ease: "none",
+            repeat: -1
+          });
+        }
 
         // Hover effects for tech cards
         if (containerRef.current) {
