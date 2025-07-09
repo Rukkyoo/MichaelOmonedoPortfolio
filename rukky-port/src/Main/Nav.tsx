@@ -1,4 +1,4 @@
-import { FaRegMoon, FaBars } from "react-icons/fa";
+import {  FaBars } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { type RefObject } from "react";
 import React from "react";
@@ -22,7 +22,6 @@ const Nav = ({ scrollToSection, refs }: NavProps) => {
       <div className="flex font-bold justify-between gap-4 items-center text-black p-4">
         Rukkyoo{" "}
         <span className="cursor-pointer hover:text-gray-500">
-          <FaRegMoon />
         </span>
       </div>
 
