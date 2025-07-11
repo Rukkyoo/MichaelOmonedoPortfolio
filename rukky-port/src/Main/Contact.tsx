@@ -1,23 +1,25 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { SiGmail } from "react-icons/si"
-import { FaLinkedinIn } from "react-icons/fa"
-import { FaXTwitter } from "react-icons/fa6"
-import { FaGithub } from "react-icons/fa"
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SiGmail } from "react-icons/si";
+import { FaLinkedinIn } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
+import { ToastContainer, toast } from "react-toastify";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 const Contact = () => {
-  const contactRef = useRef<HTMLDivElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const formRef = useRef<HTMLFormElement>(null)
-  const socialRef = useRef<HTMLDivElement>(null)
+  const contactRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const socialRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -25,7 +27,7 @@ const Contact = () => {
       gsap.set([titleRef.current, formRef.current, socialRef.current], {
         opacity: 0,
         y: 50,
-      })
+      });
 
       // Create scroll-triggered animation
       const tl = gsap.timeline({
@@ -35,7 +37,7 @@ const Contact = () => {
           end: "bottom 20%",
           toggleActions: "play none none reverse",
         },
-      })
+      });
 
       // Animate title
       tl.to(titleRef.current, {
@@ -53,7 +55,7 @@ const Contact = () => {
             duration: 1,
             ease: "power3.out",
           },
-          "-=0.4",
+          "-=0.4"
         )
         // Animate social icons
         .to(
@@ -64,8 +66,8 @@ const Contact = () => {
             duration: 0.6,
             ease: "power3.out",
           },
-          "-=0.3",
-        )
+          "-=0.3"
+        );
 
       // Animate form fields individually on scroll
       gsap.from(".form-field", {
@@ -81,10 +83,10 @@ const Contact = () => {
         stagger: 0.1,
         ease: "power2.out",
         delay: 0.3,
-      })
+      });
 
       // Animate social icons individually
-      gsap.from(".social-icon", {
+      /* gsap.from(".social-icon", {
         scrollTrigger: {
           trigger: socialRef.current,
           start: "top 90%",
@@ -97,30 +99,30 @@ const Contact = () => {
         stagger: 0.1,
         ease: "back.out(1.7)",
         delay: 0.5,
-      })
+      }); */
 
       // Form input focus animations
-      const inputs = document.querySelectorAll("input, textarea")
+      const inputs = document.querySelectorAll("input, textarea");
       inputs.forEach((input) => {
         input.addEventListener("focus", () => {
           gsap.to(input, {
             scale: 1.02,
             duration: 0.3,
             ease: "power2.out",
-          })
-        })
+          });
+        });
 
         input.addEventListener("blur", () => {
           gsap.to(input, {
             scale: 1,
             duration: 0.3,
             ease: "power2.out",
-          })
-        })
-      })
+          });
+        });
+      });
 
       // Button hover animations
-      const submitButton = document.querySelector(".submit-button")
+      const submitButton = document.querySelector(".submit-button");
       if (submitButton) {
         submitButton.addEventListener("mouseenter", () => {
           gsap.to(submitButton, {
@@ -128,8 +130,8 @@ const Contact = () => {
             y: -2,
             duration: 0.3,
             ease: "power2.out",
-          })
-        })
+          });
+        });
 
         submitButton.addEventListener("mouseleave", () => {
           gsap.to(submitButton, {
@@ -137,8 +139,8 @@ const Contact = () => {
             y: 0,
             duration: 0.3,
             ease: "power2.out",
-          })
-        })
+          });
+        });
       }
 
       // Social icon hover animations
@@ -149,8 +151,8 @@ const Contact = () => {
             rotation: 5,
             duration: 0.3,
             ease: "power2.out",
-          })
-        })
+          });
+        });
 
         icon.addEventListener("mouseleave", () => {
           gsap.to(icon, {
@@ -158,43 +160,55 @@ const Contact = () => {
             rotation: 0,
             duration: 0.3,
             ease: "power2.out",
-          })
-        })
-      })
+          });
+        });
+      });
+    }, contactRef);
 
-      // Form submission animation
-      const form = formRef.current
-      if (form) {
-        form.addEventListener("submit", (e) => {
-          e.preventDefault()
+    return () => ctx.revert();
+  }, []);
 
-          // Create success animation
-          gsap.to(form, {
-            scale: 0.95,
-            duration: 0.1,
-            ease: "power2.out",
-            yoyo: true,
-            repeat: 1,
-            onComplete: () => {
-              // You can add actual form submission logic here
-              console.log("Form submitted!")
-            },
-          })
-        })
-      }
-    }, contactRef)
+  const sendEmail = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
 
-    return () => ctx.revert()
-  }, [])
+    if (formRef.current) {
+      emailjs
+        .sendForm(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          formRef.current,
+          {
+            publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+          }
+        )
+        .then(() => {
+          console.log("SUCCESS!");
+          toast.success("Email sent successfully!");
+          if (formRef.current) {
+            formRef.current.reset();
+          }
+        });
+    } else {
+      console.error("Form reference is null.");
+    }
+  };
 
   return (
-    <div ref={contactRef} id="contact" className="mt-10 flex flex-col items-center">
+    <div
+      ref={contactRef}
+      id="contact"
+      className="mt-10 flex flex-col items-center"
+    >
       <h3 ref={titleRef} className="text-2xl font-bold mb-8 lg:text-4xl">
         Contact Me
       </h3>
 
       <div className="flex flex-col items-center">
-        <form ref={formRef} className="w-[90vw] border-zinc-300 rounded-md border-2 p-6 lg:w-[60vw]">
+        <form
+          ref={formRef}
+          className="w-[90vw] border-zinc-300 rounded-md border-2 p-6 lg:w-[60vw]"
+          onSubmit={sendEmail}
+        >
           <div className="form-field mb-4">
             <label htmlFor="name" className="block text-zinc-700 mb-2">
               Your Name
@@ -202,6 +216,7 @@ const Contact = () => {
             <input
               type="text"
               id="name"
+              name="user_name"
               className="w-full px-3 py-2 bg-zinc-200 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -212,6 +227,7 @@ const Contact = () => {
             </label>
             <input
               type="email"
+              name="user_email"
               id="email"
               className="w-full px-3 py-2 bg-zinc-200 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -222,6 +238,7 @@ const Contact = () => {
               Your Message
             </label>
             <textarea
+              name="user_message"
               id="message"
               rows={4}
               className="w-full px-3 py-2 bg-zinc-200 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -234,6 +251,7 @@ const Contact = () => {
           >
             Send Message
           </button>
+          <ToastContainer className="absolute top-0 right-0" />
         </form>
 
         <div ref={socialRef} className="flex gap-6 mt-4">
@@ -274,7 +292,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;
